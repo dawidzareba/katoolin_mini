@@ -10,21 +10,19 @@ reset = "\033[0m"
 
 # option menu
 menu_list = {
-    "1":"show_categories",
-    "2":"update",
-    "3":"help",
-    "4":"exit",
-    "show":"show_categories",
-    "clear":"clean_screen",
-    "update":"update",
-    "help":"help",
-    "exit":"exit",
+    "1": "show_categories",
+    "2": "update",
+    "3": "help",
+    "4": "exit",
+    "show": "show_categories",
+    "clear": "clean_screen",
+    "update": "update",
+    "help": "help",
+    "exit": "exit",
 }
 
-menu_list_set = {
-    "load":"load_category",
-    "search":"search_tool"
-}
+menu_list_set = {"load": "load_category", "search": "search_tool"}
+
 
 def load(fuction, param=False):
     """
@@ -35,26 +33,31 @@ def load(fuction, param=False):
     else:
         globals()[fuction](param)
 
+
 def show_categories():
     """
     Displays the categories available in the 'categories' dictionary of the core/categories.py file
     """
-    print("\n%s:: Categories:%s\n" %(green, reset))
+    print("\n%s:: Categories:%s\n" % (green, reset))
     for name in categories.items():
         category = name[1][0]
         category = format(category)
-        if name[0]%2 != 0:
-            print(" "+str(name[0]).rjust(2) + ")", category.ljust(23)[:23],)
+        if name[0] % 2 != 0:
+            print(
+                " " + str(name[0]).rjust(2) + ")",
+                category.ljust(23)[:23],
+            )
         else:
-            print(" "+str(name[0]).rjust(2) + ")", category)
+            print(" " + str(name[0]).rjust(2) + ")", category)
     print(" ")
+
 
 def load_category(key):
     """
     When loading a category you can install one or more tools of that category
     """
     if int(key) in categories.keys():
-        os.system('clear')
+        os.system("clear")
         category = categories[int(key)][0]
         category = format(category)
         print(green + ":: " + category + reset + "\n")
@@ -64,33 +67,35 @@ def load_category(key):
         action = False
         while action == False:
             try:
-                option = raw_input(": katoolin (%s%s%s) > " %(yellow, site, reset))
+                option = raw_input(": katoolin (%s%s%s) > " % (yellow, site, reset))
             except KeyboardInterrupt:
                 delete_repository()
-                print( "..."); break
+                print("...")
+                break
             try:
-                if option == 'back':
+                if option == "back":
                     delete_repository()
                     break
-                elif option == 'clear':
-                    os.system('clear')
-                elif option == 'show':
+                elif option == "clear":
+                    os.system("clear")
+                elif option == "show":
                     show_tools(categories[int(key)][1])
-                elif option == 'help':
+                elif option == "help":
                     help(True)
-                elif option == '99':
+                elif option == "99":
                     add_repository()
                     for tool in tools:
                         install_tool = "apt install -y " + tool
                         os.system(install_tool)
-                elif int(option) in range(1,len(tools)+1):
+                elif int(option) in range(1, len(tools) + 1):
                     add_repository()
-                    install_tool = "apt install -y " + tools[int(option)-1]
+                    install_tool = "apt install -y " + tools[int(option) - 1]
                     os.system(install_tool)
             except:
                 pass
     else:
         print(red + "E: The command is invalid!" + reset)
+
 
 def search_tool(tool):
     """
@@ -103,18 +108,23 @@ def search_tool(tool):
         category = lists[1][0]
         category = format(category)
         if tool in tools:
-            print(" [%s+%s] %s" %(green, reset, category))
+            print(" [%s+%s] %s" % (green, reset, category))
+
 
 def show_tools(tools):
     """
     Show all tools in the loaded category
     """
     for tool in enumerate(tools):
-        if tool[0]%2 == 0:
-            print(" "+str(tool[0]+1).rjust(2) + ")", tool[1].ljust(23)[:23],)
+        if tool[0] % 2 == 0:
+            print(
+                " " + str(tool[0] + 1).rjust(2) + ")",
+                tool[1].ljust(23)[:23],
+            )
         else:
-            print(" "+str(tool[0]+1).rjust(2) + ")", tool[1])
+            print(" " + str(tool[0] + 1).rjust(2) + ")", tool[1])
     print("\n 99) ALL")
+
 
 def add_repository():
     """
@@ -125,13 +135,16 @@ def add_repository():
     else:
         try:
             f = open("/etc/apt/sources.list.d/katoolin.list", "wb")
-            f.write("#Katoolin\ndeb http://http.kali.org/kali kali-rolling main contrib non-free\n# For source package access, uncomment the following line\n# deb-src http://http.kali.org/kali kali-rolling main contrib non-free\n")
+            f.write(
+                "#Katoolin\ndeb http://http.kali.org/kali kali-rolling main contrib non-free\n# For source package access, uncomment the following line\n# deb-src http://http.kali.org/kali kali-rolling main contrib non-free\n"
+            )
             f.close()
             print(green + "\n[+] Add repository\n" + reset)
             add_key()
         except IOError:
-            print(red+"E: Please run as root"+reset)
+            print(red + "E: Please run as root" + reset)
             sys.exit()
+
 
 def delete_repository():
     """
@@ -141,6 +154,7 @@ def delete_repository():
     if os.path.exists(repository):
         os.remove(repository)
         print(green + "\n[+] Repository deleted\n" + reset)
+
 
 def add_key():
     """
@@ -155,8 +169,11 @@ def add_key():
         f.write("katoolin\n")
         f.close()
         print(green + "\n[+] Add keyserver\n" + reset)
-        os.system('apt-get update -o Dir::Etc::sourcelist="sources.list.d/katoolin.list" -o Dir::Etc::sourceparts="-" -o apt::Get::List-Cleanup="0"')
+        os.system(
+            'apt-get update -o Dir::Etc::sourcelist="sources.list.d/katoolin.list" -o Dir::Etc::sourceparts="-" -o apt::Get::List-Cleanup="0"'
+        )
         print(green + "\n[+] Update\n" + reset)
+
 
 def banner():
     version = "v1.3b"
@@ -168,7 +185,8 @@ def banner():
 
  4) Exit
     """
-    print """
+    print(
+        """
  $$\   $$\             $$\                         $$\ $$\           
  $$ | $$  |            $$ |                        $$ |\__|          
  $$ |$$  /  $$$$$$\  $$$$$$\    $$$$$$\   $$$$$$\  $$ |$$\ $$$$$$$\  
@@ -179,46 +197,57 @@ def banner():
  \__|  \__| \_______|   \____/  \______/  \______/ \__|\__|\__|  \__| %s%s
 
  %s+ -- -- +=[ Original project: https://github.com/LionSec/katoolin | LionSec
- + -- -- +=[ %s Tools%s""" %(cyan,reset,cyan,version,reset,green,tools,reset)
+ + -- -- +=[ %s Tools%s"""
+        % (cyan, reset, cyan, version, reset, green, tools, reset)
+    )
     print(options)
+
 
 def update():
     """
     Update 'katoolin' with: git pull
     """
     try:
-        os.system('git pull')
+        os.system("git pull")
         print(yellow + "W: Please restart katoolin" + reset)
     except:
-        print(red + "E: can't start update please use <git pull>"+reset)
+        print(red + "E: can't start update please use <git pull>" + reset)
+
 
 def help(x=False):
     """
     Displays tool help
     """
     if x != True:
-        print(""": load=<category>   Load category
+        print(
+            """: load=<category>   Load category
 : search=<tool>     Find tool
 : clear             Clean screen  
 : 1, show           Show categories
 : 2, update         Update katoolin (git pull)
 : 3, help           Show help
-: 4, exit           Exit katoolin""")
+: 4, exit           Exit katoolin"""
+        )
     else:
-        print(""": <option>  Install tool
+        print(
+            """: <option>  Install tool
 : 99        Install all tools in the category
 : back      Return to previous menu
 : clear     Clean screen
 : show      Show tools
-: help      Show help""")
+: help      Show help"""
+        )
+
 
 def clean_screen():
-    os.system('clear')
+    os.system("clear")
     banner()
+
 
 def exit():
     print("\nClosing, bye! - katoolin")
     sys.exit()
+
 
 def num_tools():
     """
@@ -227,10 +256,11 @@ def num_tools():
     num = 0
     for name in categories.items():
         tools = name[1][1]
-        num+= len(tools)
+        num += len(tools)
     return num
 
+
 def format(category):
-    category = category.replace('_', ' ')
+    category = category.replace("_", " ")
     category = category.title()
     return category
