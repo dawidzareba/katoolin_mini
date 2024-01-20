@@ -1,6 +1,6 @@
 import os
-import sys, traceback
-
+import sys
+import traceback
 
 if os.getuid() != 0:
     print("Sorry. This script requires sudo privledges")
